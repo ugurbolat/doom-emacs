@@ -684,6 +684,7 @@ Note this does validate the :org-roam plist's values or keywords."
       (quote
        ("project_title" "horizon_title"
         "goal" "habit" "recurring" "focus_task" "reminder" "pinned"
+        "important" "urgent"
         "r@batch" "r@daily" "r@weekly" "r@biweekly" "r@monthly" "r@quarterly" "r@emesterly" "r@yearly" "r@custom"
         "h@batch" "h@daily" "h@weekly" "h@biweekly" "h@monthly" "h@quarterly" "h@semesterly" "h@yearly" "h@custom"
         )))
@@ -1858,18 +1859,23 @@ sorttasks plan.start.up
            ;;(:discard (:tag "project_title"))
            (:discard (:not (:scheduled t :deadline t))) ; discard timestamps without scheduled and deadline
 
-           (:discard (:and (:tag "pinned" :tag "habit")))
-           (:name "Procrastination Alert :S - Habits" ; don't worry about deadline because you still have time to start since it is scheduled in the future
-            :and (:scheduled past :tag "habit" :tag "important" :tag "urgent")
-            :and (:scheduled past :tag "habit" :tag "important")
-            :and (:scheduled past :tag "habit" :tag "urgent")
-            :and (:scheduled past :tag "habit")
-            :order 6)
-           (:name "Procrastination Alert :S - Recurring" ; don't worry about deadline because you still have time to start since it is scheduled in the future
+           (:discard (:tag "habit"))
+
+           ;;(:discard (:and (:tag "pinned" :tag "habit")))
+           ;; NOTE if you have important habits, then tag pinned
+           ;; (:name "Procrastination Alert :S - Habits" ; don't worry about deadline because you still have time to start since it is scheduled in the future
+           ;;  :and (:scheduled past :tag "habit" :tag "important" :tag "urgent")
+           ;;  :and (:scheduled past :tag "habit" :tag "important")
+           ;;  :and (:scheduled past :tag "habit" :tag "urgent")
+           ;;  :and (:scheduled past :tag "habit")
+           ;;  :order 6)
+
+           (:name "Important &/ Urgent Recurring Tasks" ; don't worry about deadline because you still have time to start since it is scheduled in the future
             :and (:scheduled past :tag "recurring" :tag "important" :tag "urgent")
             :and (:scheduled past :tag "recurring" :tag "important")
             :and (:scheduled past :tag "recurring" :tag "urgent")
-            :and (:scheduled past :tag "recurring")
+            ;; NOTE show only important &/ urgent
+            ;; :and (:scheduled past :tag "recurring")
             :order 7)
 
            (:name "Past Deadlines - Shit!"
@@ -1896,7 +1902,7 @@ sorttasks plan.start.up
            ;;  :and (:scheduled future :deadline future :tag "urgent")
            ;;  :and (:scheduled future :deadline future)
            ;;  :order 4)
-           (:name "Procrastination Alert :S - Important &/ Urgent Tasks w/o Deadline" ; don't worry about deadline because you still have time to start since it is scheduled in the future
+           (:name "Important &/ Urgent Tasks w/o Deadline" ; don't worry about deadline because you still have time to start since it is scheduled in the future
             :and (:scheduled past :deadline nil :tag "important" :tag "urgent")
             :and (:scheduled past :deadline nil :tag "important")
             :and (:scheduled past :deadline nil :tag "urgent")
@@ -2202,26 +2208,6 @@ sorttasks plan.start.up
              t)
 
 (add-to-list 'org-agenda-custom-commands
-             `("wrz" "ZK"
-               (
-                (alltodo "" (
-                             (org-agenda-files (append `(;;,ub/gtd-pocket-file
-                                                         ;; ,ub/gtd-refile-file)
-                                                         )
-                                                         ;;ub/journal-main-files-list
-                                                         ub/zk-refile-files-list
-                                                         ))
-                                               (org-agenda-overriding-header ":notebook: Zettelkasten")
-                                               (org-agenda-prefix-format (quote ((todo . " "))))
-                                               (org-agenda-sorting-strategy '((todo todo-state-down priority-down timestamp-up)))
-                                               ;;(org-agenda-sorting-strategy '((todo time-up)))  ; BUG NOTE: doesn't work somehow ignored :/
-                                               (org-super-agenda-groups
-                                                '((:auto-ts-reverse t)))
-                                               ))
-                         ))
-               t)
-
-(add-to-list 'org-agenda-custom-commands
              `("wrr" "Refile"
                (
                 (alltodo "" (
@@ -2265,6 +2251,26 @@ sorttasks plan.start.up
 
                 ))
              t)
+
+(add-to-list 'org-agenda-custom-commands
+             `("uz" "ZK"
+               (
+                (alltodo "" (
+                             (org-agenda-files (append `(;;,ub/gtd-pocket-file
+                                                         ;; ,ub/gtd-refile-file)
+                                                         )
+                                                         ;;ub/journal-main-files-list
+                                                         ub/zk-refile-files-list
+                                                         ))
+                                               (org-agenda-overriding-header ":notebook: Zettelkasten")
+                                               (org-agenda-prefix-format (quote ((todo . " "))))
+                                               (org-agenda-sorting-strategy '((todo todo-state-down priority-down timestamp-up)))
+                                               ;;(org-agenda-sorting-strategy '((todo time-up)))  ; BUG NOTE: doesn't work somehow ignored :/
+                                               (org-super-agenda-groups
+                                                '((:auto-ts-reverse t)))
+                                               ))
+                         ))
+               t)
 
 (add-to-list 'org-agenda-custom-commands
              `("uj" "OP Project"
