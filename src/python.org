@@ -1,0 +1,18 @@
+
+
+* Python
+:PROPERTIES:
+:ID:       f6abd5e0-608e-4045-978e-c5580c970270
+:END:
+#+BEGIN_SRC emacs-lisp
+(use-package! conda
+  :config
+  (setq conda-anaconda-home ub/conda-anaconda-home)
+  (setq conda-env-home-directory ub/conda-env-home-directory)
+  ;; (conda-env-initialize-interactive-shells)
+  ;; (conda-env-initialize-eshell)
+  )
+(use-package! elpy
+  :config
+  (elpy-enable))
+#+END_SRC
