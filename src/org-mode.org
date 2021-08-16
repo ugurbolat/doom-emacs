@@ -272,7 +272,7 @@ Note this does validate the :org-roam plist's values or keywords."
          :unnarrowed t)
 
                 ("j" "Project" plain
-                 "\n\n* PROJECT ${title} %?%i   :project_title:\n:PROPERTIES:\n:CREATED: %U\n"
+                 "\n\n* PROJ ${title} %?%i   :project_title:\n:PROPERTIES:\n:CREATED: %U\n"
 ;;                          ":END:"
          :if-new (file+head "%(concat ub/gtd-root-dir \"/\" (ido-completing-read \"Select directory: \" ub/gtd-projects-dir-name-list) \".projects\" \"/pj_${slug}.org\")"
                             "#+TITLE: ${title}\n#+DATE: %<%Y-%m-%d>\n#+FILETAGS: zk phd\n\n")
@@ -380,7 +380,7 @@ Note this does validate the :org-roam plist's values or keywords."
 ;;                         :function org-roam-capture--get-point
 ;;                         :before-finalize (lambda () (org-id-get-create))
 ;;                         :template
-;;                         ("\n\n* PROJECT ${title} %?%i   :project_title:"
+;;                         ("\n\n* PROJ ${title} %?%i   :project_title:"
 ;;                          ":PROPERTIES:"
 ;;                          ":CREATED: %U"
 ;;                          ":END:")
@@ -1596,24 +1596,20 @@ sorttasks plan.start.up
 ***** default
 #+BEGIN_SRC emacs-lisp
 
-
 (setq org-todo-keywords
       '(
-        (sequence "TODO(T!)" "T@SOMEDAY(s!)" "T@NEXT(n@/!)" "T@HOLD(h@/!)" "T@IN-PROGRESS(i@/!)" "T@WAITING(w@/!)" "|" "T@DONE(d!)" "T@DELEGATE(g!)" "T@KILL(k!)")
-        (sequence "IDEA(I!)" "I@SOMEDAY(s!)" "I@NEXT(n@/!)" "I@HOLD(h@/!)" "I@CONNECTED(i@/!)" "|" "I@DONE(d!)" "I@DELEGATE(g!)" "I@KILL(k!)")
-        (sequence "DONT(D!)" "D@NEXT(n@/!)" "D@IN-PROGRESS(i@/!)" "|" "D@DONE(d!)" "D@KILL(k!)")
-        (sequence "NOTE(N!)" "N@ORGZLY(z)" "N@NEXT(n!)" "N@WRITING(i!)" "|" "N@DONE(d!)" "N@KILL(k!)")
-        ;;(sequence "QUESTION(Q!)" "|" "Q@DONE(E!)" "Q@KILL(X!)")
+        (sequence "TODO(T!)" "T@NEXT(n@/!)" "T@HOLD(h@/!)" "T@IN(i@/!)" "T@WAIT(w@/!)" "|" "T@DONE(d!)" "T@DELEG(g!)" "T@KILL(k!)")
+        (sequence "IDEA(I!)" "I@NEXT(n@/!)" "I@HOLD(h@/!)" "I@DEV(i@/!)" "I@LINK(l@/!)" "|" "I@DONE(d!)" "I@DELEG(g!)" "I@KILL(k!)")
+        (sequence "DONT(D!)" "D@NEXT(n@/!)" "D@IN(i@/!)" "|" "D@DONE(d!)" "D@KILL(k!)")
+        (sequence "NOTE(N!)" "N@ZLY(z)" "N@NEXT(n!)" "N@DEV(i!)" "|" "N@DONE(d!)" "N@KILL(k!)")
         ;;(sequence "READ(r!)" "R@SKIM(m!)" "R@ANALYTIC(a!)" "R@STUDY(s!)" "|" "R@DONE(1!)" "R@KILL(2!)")
-        ;;(sequence "LEARN(l!)" "L@IN-PROGRESS(y@/!)" "|" "L@DONE(5!)" "L@KILL(6!)")
-        (sequence "BUG(B!)" "B@SOMEDAY(s!)" "B@NEXT(n@/!)" "B@KNOWN-CAUSE(c@/!)" "B@REPORTED(r@/!)" "|" "B@FIXED(d!)" "B@WORKAROUND(o@)" "B@KILL(k!)" )
-        (sequence "PROJECT(J!)" "J@SOMEDAY(s!)" "J@NEXT(n@/!)" "J@HOLD(h@/!)" "J@IN-PROGRESS(i@/!)" "|" "J@DONE(d!)" "J@KILL(k!)")
-        ;;(sequence "POCKET(P)" "|" "P@DONE(d!)" "P@KILL(k!)")
+        (sequence "BUG(B!)" "B@NEXT(n@/!)" "B@KNOWN(c@/!)" "B@REPORT(r@/!)" "|" "B@FIXED(d!)" "B@WORKA(o@)" "B@KILL(k!)")
+        (sequence "PROJ(J!)" "J@NEXT(n@/!)" "J@HOLD(h@/!)" "J@IN(i@/!)" "|" "J@DONE(d!)" "J@KILL(k!)")
         (sequence "|" "DONE(d!)" "KILL(k!)")
         ))
 
 ;; org-todo-keyword-faces
-(custom-set-faces '(org-headline-done ((t (:inherit variable-pitch :strike-through t)))))
+;; (custom-set-faces '(org-headline-done ((t (:inherit variable-pitch :strike-through t)))))
 
 ;; https://github.com/nmartin84/.doom.d
 ;; (custom-declare-face '+org-todo-next '((t (:inherit (bold font-lock-constant-face org-todo)))) "")
@@ -1944,17 +1940,17 @@ sorttasks plan.start.up
             :order 3)
            (:name "Waiting w/o Deadline - Waiting for Forever?"
             :time-grid t
-            :and (:todo "T@WAITING" :deadline nil :tag "important" :tag "urgent")
-            :and (:todo "T@WAITING" :deadline nil :tag "important")
-            :and (:todo "T@WAITING" :deadline nil :tag "urgent")
-            :and (:todo "T@WAITING" :deadline nil)
+            :and (:todo "T@WAIT" :deadline nil :tag "important" :tag "urgent")
+            :and (:todo "T@WAIT" :deadline nil :tag "important")
+            :and (:todo "T@WAIT" :deadline nil :tag "urgent")
+            :and (:todo "T@WAIT" :deadline nil)
             :order 6)
            (:name "In-Progress w/o Deadline - Working on Forever?"
             :time-grid t
-            :and (:todo "T@IN-PROGRESS" :deadline nil :tag "important" :tag "urgent")
-            :and (:todo "T@IN-PROGRESS" :deadline nil :tag "important")
-            :and (:todo "T@IN-PROGRESS" :deadline nil :tag "urgent")
-            :and (:todo "T@IN-PROGRESS" :deadline nil)
+            :and (:todo "T@IN" :deadline nil :tag "important" :tag "urgent")
+            :and (:todo "T@IN" :deadline nil :tag "important")
+            :and (:todo "T@IN" :deadline nil :tag "urgent")
+            :and (:todo "T@IN" :deadline nil)
             :order 7)
            (:name "Hold w/o Deadline - Working on Forever?"
             :time-grid t
@@ -1965,13 +1961,13 @@ sorttasks plan.start.up
             :order 8)
            (:name "Self-deceptiving :S - Tasks w/o deadline" ;scheduled it already but haven't take actions yet because you haven't set deadline !
             :time-grid t
-            :and (:scheduled past :deadline nil :not (:todo "I@CONNECTED") :not (:todo "T@IN-PROGRESS") :not (:todo "T@HOLD") :not (:todo "J@IN-PROGRESS") :not (:todo "J@HOLD"))
+            :and (:scheduled past :deadline nil :not (:todo "I@LINK") :not (:todo "T@IN") :not (:todo "T@HOLD") :not (:todo "J@IN") :not (:todo "J@HOLD"))
             :order 9)
            (:name "Procrastinating Knowingly :P - Tasks w/ Deadline" ;scheduled it already but haven't take actions yet although you set deadline!
             :time-grid t
             :and (:scheduled past :deadline future :todo "TODO")
             :and (:scheduled past :deadline future :todo "T@NEXT")
-            :and (:scheduled past :deadline future :todo "PROJECT")
+            :and (:scheduled past :deadline future :todo "PROJ")
             :and (:scheduled past :deadline future :todo "P@NEXT")
             :order 10)
            (:discard (:anything t))
@@ -2063,17 +2059,17 @@ sorttasks plan.start.up
            (:discard (:tag "project_title"))
            (:discard (:tag "recurring"))
            (:name "Started but Forgot to Schedule/Deadline :/ - Commit Properly!"
-            :and (:todo "T@IN-PROGRESS" :tag "important" :tag "urgent")
-            :and (:todo "T@IN-PROGRESS" :tag "important")
-            :and (:todo "T@IN-PROGRESS" :tag "urgent")
-            :and (:todo "T@WAITING" :tag "important" :tag "urgent")
-            :and (:todo "T@WAITING" :tag "important")
-            :and (:todo "T@WAITING" :tag "urgent")
+            :and (:todo "T@IN" :tag "important" :tag "urgent")
+            :and (:todo "T@IN" :tag "important")
+            :and (:todo "T@IN" :tag "urgent")
+            :and (:todo "T@WAIT" :tag "important" :tag "urgent")
+            :and (:todo "T@WAIT" :tag "important")
+            :and (:todo "T@WAIT" :tag "urgent")
             :and (:todo "T@HOLD" :tag "important" :tag "urgent")
             :and (:todo "T@HOLD" :tag "important")
             :and (:todo "T@HOLD" :tag "urgent")
-            :todo "T@IN-PROGRESS"
-            :todo "T@WAITING"
+            :todo "T@IN"
+            :todo "T@WAIT"
             :todo "T@HOLD"
             :order 10)
            (:discard (:anything t))))
